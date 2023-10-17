@@ -10,19 +10,8 @@ declare global {
 interface RelayOneInterface {
   authBeta: (withGrant?: boolean) => Promise<any>;
   isLinked: () => Promise<boolean>;
-  send: (props: Object) => Promise<SendResult>;
-  getBalance2: () => Promise<string>
+  getBalance2: () => Promise<any>
   requestIdentity: () => Promise<string>
-}
-
-interface SendResult {
-  txid: string;
-  rawTx: string;
-  amount: number; // amount spent in button currency
-  currency: string; // button currency
-  satoshis: number; // amount spent in sats
-  paymail: string; // user paymail deprecated
-  identity: string; // user pki deprecated
 }
 
 
@@ -33,7 +22,6 @@ interface RelayOneContextType {
   userBalance: string | undefined,
   paymail: string | undefined,
   isLinked: boolean | undefined,
-  currentBlockHeight: number | undefined
 }
 
 
@@ -57,7 +45,6 @@ export const RelayOneContextProvider = ({
   const [paymail, setPaymail] = useState<string | undefined>(undefined)
   const [pubkey, setPubkey] = useState<string | undefined>(undefined)
   const [isLinked, setIsLinked] = useState<boolean | undefined>(undefined)
-  const [currentBlockHeight, setCurrentBlockHeight] = useState<number | undefined>(undefined)
 
   console.log("handle: ", handle, "balance: ", userBalance, "paymail: ", paymail, "pubkey: ", pubkey)
 
@@ -77,8 +64,8 @@ export const RelayOneContextProvider = ({
       setHandle(data.paymail.substring(0, data.paymail.lastIndexOf("@")));
       setPubkey(data.pubkey);
 
-      // const balance = await relayone.getBalance2();
-      // setUserBalance((balance.satoshis / 100000000).toFixed(2).toString())
+      const balance = await relayone.getBalance2();
+      setUserBalance((balance.satoshis / 100000000).toFixed(2).toString())
     } catch (e) {
       if (e instanceof Error) {
           console.log(e.message);
@@ -92,7 +79,7 @@ export const RelayOneContextProvider = ({
   return (
     <>
       <Script src="https://one.relayx.io/relayone.js" onLoad={() => fetchRelayOneData()} />   
-      <RelayOneContext.Provider value={{ fetchRelayOneData, pubkey, handle, userBalance, paymail, isLinked, currentBlockHeight }}>
+      <RelayOneContext.Provider value={{ fetchRelayOneData, pubkey, handle, userBalance, paymail, isLinked }}>
         {children}
       </RelayOneContext.Provider>
     </>

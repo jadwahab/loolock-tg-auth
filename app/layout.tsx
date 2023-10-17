@@ -90,8 +90,6 @@ export default async function RootLayout({
 
   return (
     <html lang="en" style={{ scrollBehavior: 'smooth' }}>
-      <Script src="https://one.relayx.io/relayone.js" />
-      <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js" />
       <body className={inter.className}>
         <RelayOneContextProvider>
           {children}
